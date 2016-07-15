@@ -473,30 +473,23 @@ int DES_Decrypt_str(char *source,char *keyStr,char *reslut)
 	DES_MakeSubKeys(bKey,subKeys);
 
 	//加载解密数据
-	while(1)
-	{
-
+	while(times < fileLen){ 
 		memset(cipherBlock,'\0',8);  
+		memcpy(plainBlock,source+times,8);
+		for(int i = 0;i<8;++i)
+			printf("times = %d  cipherBlock[%d] = %x\n",times,i,plainBlock[i]);
 
-		if(times < fileLen){ 
-			memcpy(plainBlock,source+times,8);
-			for(int i = 0;i<8;++i)
-				printf("times = %d  cipherBlock[%d] = %x\n",times,i,plainBlock[i]);
+		DES_DecryptBlock(plainBlock,subKeys,cipherBlock);		
 
-			DES_DecryptBlock(plainBlock,subKeys,cipherBlock);		
+		printf("times = %d cipherBlock = ",times);
+		for(int i = 0; i < 8;++i)
+			printf("%x ",cipherBlock[i]);
+		printf("\n");
 
-			printf("times = %d cipherBlock = ",times);
-			for(int i = 0; i < 8;++i)
-				printf("%x ",cipherBlock[i]);
-			printf("\n");
-
-			memcpy(reslut+times,cipherBlock,8); 
-			printf("reslut = %s\n",reslut);
-			times += 8;
-		}else{  
-			break;  
-		} 
-	}
+		memcpy(reslut+times,cipherBlock,8); 
+		printf("reslut = %s\n",reslut);
+		times += 8;
+	}  
 
 	printf("times = %d cipherBlock = ",times);
 	for(int i = 0; i < 8;++i)
@@ -523,6 +516,9 @@ int DES_Decrypt_str(char *source,char *keyStr,char *reslut)
 		printf("else cipherBlock = %s\n",reslut+times);
 	}
 	printf("cipherBlock = %s\n",reslut);
+	for(int i = 0; i < 184;++i)
+		printf("%x ",reslut[i]);
+	printf("\n");
 	return 0;
 }
 
